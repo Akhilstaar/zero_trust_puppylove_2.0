@@ -8,7 +8,6 @@ import "../app/(landing)/globals.css";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Dog from "@/components/Dog";
-// import ThemeButton from "@/components/Theme";
 import Clear from "@/components/clear";
 import { handleLog } from "../utils/API_Calls/login_api"
 import { useRouter } from "next/router"
@@ -21,8 +20,8 @@ const LoginPage: React.FC = () => {
     const [data, setData] = useState({ id: "", password: "" });
     const [pass,setPass] = useState("password")
     const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
-    // It will be public anyway
     const CAPTCHA_KEY = process.env.CAPTCHA_KEY || "6Lc9nGspAAAAAG--84TvtYFiXLhk1kp70V38VWWj"
+    //Server side Captcha Key is public anyway
 
     const router = useRouter()
     const toast = useToast()
@@ -43,16 +42,21 @@ const LoginPage: React.FC = () => {
 
         if (status.success) {
             // Heart Sending Period Over, Now user is doing last day login to give Confirmation for Matching or to see Results(later)
-            if(!status.permit) {
-                if(!status.publish) {
-                    router.push(`/confirmation`)
-                }
-                else {
-                    router.push(`/result`)
-                }
-            }
-            else {
-                router.push(`/dashboard`)
+            switch (status.stage) {
+                case 0:
+                    router.push(`/stage1dash`)
+                    break;
+                case 1:
+                    router.push(`/stage2dash`)
+                    break;
+                case 2:
+                    if (status.publish) {
+                        router.push(`/result`)
+                    }
+                    else {
+                        router.push(`/confirmation`)
+                    }
+                    break;
             }
         }
         else {

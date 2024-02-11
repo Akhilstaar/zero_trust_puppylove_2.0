@@ -14,31 +14,30 @@ import { IoEye } from 'react-icons/io5';
 
 const VerifyPage: React.FC = () => {
     const router = useRouter()
-    // if(router.query==null) return (<></>);
 
-    const [pass,setPass] = useState("password")
-    const [pass1,setPass1] = useState("password")
+    const [pass, setPass] = useState("password")
+    const [pass1, setPass1] = useState("password")
     const toast = useToast()
     const [input_OTP, setOTP] = useState("")
+
+    // flags to enforce alpha-numeric passwords
+    const [isAlphaPresent, setIsAlphaPresent] = useState(false)
+    const [isNumPresent, setIsNumPresent] = useState(false)
 
     const [data, setData] = useState({
         confirmPassword: '',
         password: '',
     });
 
-    const handleEye = ()=>{
-        if(pass === "password") setPass("text")
+    const handleEye = () => {
+        if (pass === "password") setPass("text")
         else setPass("password")
     }
 
-    const handleEye1 = ()=>{
-        if(pass1 === "password") setPass1("text")
+    const handleEye1 = () => {
+        if (pass1 === "password") setPass1("text")
         else setPass1("password")
     }
-    // flags to enforce alpha-numeric passwords
-    const [isAlphaPresent, setIsAlphaPresent] = useState(false)
-    const [isNumPresent, setIsNumPresent] = useState(false)
-
 
     const handleOTP = (e: any) => {
         e.preventDefault()
@@ -47,14 +46,12 @@ const VerifyPage: React.FC = () => {
 
     const handleSubmit = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-    
-        // Update the state with the entered password
         setData({ ...data, [name]: value });
     };
 
     useEffect(() => {
         console.log(router)
-        if(router.asPath==="/verify"){
+        if (router.asPath === "/verify") {
             router.push("/")
         }
         toast.closeAll()
@@ -67,7 +64,6 @@ const VerifyPage: React.FC = () => {
         const numRegex = /\d/;
         setIsNumPresent(numRegex.test(data.password))
     }, [data.password]);
-
 
     const handleVerifyOTP_api = async () => {
         const id = router.query
@@ -86,7 +82,7 @@ const VerifyPage: React.FC = () => {
             return
         }
         // password not safe enough
-        if(!(isAlphaPresent &&  isNumPresent && data.password.length >= 8)) {
+        if (!(isAlphaPresent && isNumPresent && data.password.length >= 8)) {
             toast({
                 title: 'Please set a alpha-numeric password of minimum 8 characters',
                 status: 'error',
@@ -98,9 +94,9 @@ const VerifyPage: React.FC = () => {
         }
 
         const user = { id: id, pass: data.password, auth: input_OTP }
-        const isValid = await handleVerifyOTP(user)
+        const res_json: Response = await handleVerifyOTP(user)
 
-        if (isValid) {
+        if (res_json.ok) {
             router.push("/login")
             toast({
                 title: 'Verified',
@@ -110,14 +106,36 @@ const VerifyPage: React.FC = () => {
                 position: 'top',
             })
         }
-        else {
-            toast({
-                title: 'Wrong OTP. Please try again',
-                status: 'error',
-                duration: 5000,
-                isClosable: true,
-                position: 'top',
-            })
+
+        switch (res_json.status) {
+            case 400:
+                toast({
+                    title: 'Please enter another public key !!, ie try again.',
+                    status: 'error',
+                    duration: 5000,
+                    isClosable: true,
+                    position: 'top',
+                })
+                break;
+            case 403:
+                toast({
+                    title: 'Invalid OTP entered',
+                    status: 'error',
+                    duration: 5000,
+                    isClosable: true,
+                    position: 'top',
+                })
+                break;
+            default: {
+                toast({
+                    title: 'Server Error',
+                    status: 'error',
+                    duration: 5000,
+                    isClosable: true,
+                    position: 'top',
+                })
+                break;
+            }
         }
     };
 
@@ -146,7 +164,7 @@ const VerifyPage: React.FC = () => {
                                         required
                                         placeholder='New Password'
                                     />
-                                <IoEye size={18} onClick={handleEye}/>
+                                    <IoEye size={18} onClick={handleEye} />
                                 </motion.div>
                                 <motion.div whileHover={{ scale: 1.05 }} className={styles['login-form-group']}>
                                     <BiSolidLock size={18} />
@@ -159,7 +177,7 @@ const VerifyPage: React.FC = () => {
                                         required
                                         placeholder='Confirm New Password'
                                     />
-                                <IoEye size={18} onClick={handleEye1}/>
+                                    <IoEye size={18} onClick={handleEye1} />
                                 </motion.div>
                             </>
                         )}
@@ -170,7 +188,6 @@ const VerifyPage: React.FC = () => {
                                     className={styles['login-input']}
                                     type="string"
                                     name='rollNo'
-                                    // value={data.rollNo}
                                     onChange={handleOTP}
                                     required
                                     placeholder='OTP token'
@@ -206,4 +223,4 @@ const VerifyPage: React.FC = () => {
     );
 };
 
-export default VerifyPage; 
+export default VerifyPage;

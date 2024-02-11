@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styles from "../styles/login.module.css"; // Import your CSS module
+import styles from "../styles/login.module.css";
 import { MdEmail } from "react-icons/md";
 import "../app/globals.css";
 import Link from "next/link";
@@ -19,7 +19,7 @@ const RegisterPage: React.FC = () => {
     };
 
     // It will be public anyway
-    const CAPTCHA_KEY = process.env.CAPTCHA_KEY || "6Lc9nGspAAAAAG--84TvtYFiXLhk1kp70V38VWWj"
+    const CAPTCHA_KEY = process.env.CAPTCHA_KEY || "6LfxO2spAAAAADOgCFVJPvOKk_SFnw2wWvU0gx2G"
 
     const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
     const [id, setId] = useState("");
@@ -35,33 +35,64 @@ const RegisterPage: React.FC = () => {
             return;
         }
 
-        const res_json : Response = await handleRegister(id, recaptchaToken)
-        const isValid = res_json.ok;
-        const already_reg = res_json.status
+        const res_json: Response = await handleRegister(id, recaptchaToken)
+        const status_code = res_json.status
 
-        if (isValid) {
+        // // Only for testing 
+        // router.push(`/verify?id=${id}`)
+        // setId("");
+        // // Only for testing 
+
+        if (res_json.ok) {
             setId("");
+            toast({
+                title: 'Email sent Successfully',
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+                position: 'top',
+            })
             router.push(`/verify?id=${id}`)
         }
-
-        else if(already_reg == 405){
-            router.push('./login')
-            toast({
-                title: 'You are already Registered. Login instead',
-                status: 'error',
-                duration: 5000,
-                isClosable: true,
-                position: 'top',
-            })
-        }else{
-            toast({
-                title: 'User not found or already registered',
-                status: 'error',
-                duration: 5000,
-                isClosable: true,
-                position: 'top',
-            })
-            // USER NOT CREATED IN DATABASE
+        switch (status_code) {
+            case 403:
+                toast({
+                    title: 'Invalid Roll No entered',
+                    status: 'error',
+                    duration: 5000,
+                    isClosable: true,
+                    position: 'top',
+                })
+                break;
+            case 405:
+                router.push('./login')
+                toast({
+                    title: 'You are already Registered. Login instead',
+                    status: 'error',
+                    duration: 5000,
+                    isClosable: true,
+                    position: 'top',
+                })
+                break;
+            case 401:
+                toast({
+                    title: 'Encountered error while sending email, please contact developers.',
+                    status: 'error',
+                    duration: 5000,
+                    isClosable: true,
+                    position: 'top',
+                })
+                break;
+            default: {
+                toast({
+                    title: 'Server Error',
+                    status: 'error',
+                    duration: 5000,
+                    isClosable: true,
+                    position: 'top',
+                })
+                break;
+            }
         }
     };
 

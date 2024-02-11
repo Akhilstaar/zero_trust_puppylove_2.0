@@ -22,7 +22,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           <Head>
             <title>Puppy Love</title>
             <link rel="shortcut icon" href="/pclub-logo.png" />
-            <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+            {/* <script src="https://www.google.com/recaptcha/api.js" async defer></script> */}
           </Head>
           <Component {...pageProps} />
         </Layout>
