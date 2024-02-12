@@ -3,6 +3,7 @@ import { Box } from "@chakra-ui/react";
 import "../styles/selectcard.css";
 
 const Stage2Card = ({ student, onBoolChange, stage2Bool, index, isActive }: any) => {
+    console.log("isActive:", isActive(student.i));
     const userName = student.u;
     const roll = student.i;
 
@@ -13,25 +14,25 @@ const Stage2Card = ({ student, onBoolChange, stage2Bool, index, isActive }: any)
     const [isClicked, setIsClicked] = useState(stage2Bool[index]);
 
     const clicked = () => {
-        if (!isActive(student.id)) return;
+        console.log("ejfbesjd")
+        if (!isActive(student.i)) return;
         setIsClicked(!isClicked);
     };
 
     useEffect(() => {
-        // Update stage2Bool array when isClicked changes
         onBoolChange(index, isClicked);
     }, [isClicked]);
 
     return (
-        <div className={`select-card ${isActive(student.id) ? '' : 'inactive'}`} onClick={clicked}>
+        <div className={`select-card ${isActive(student.i) ? '' : 'inactive'}`} onClick={clicked}>
             <div className="select-image-box">
                 <div className="select-profile" style={stylesss}></div>
             </div>
             <p className="select-card-details">{student.n}</p>
             <p className="select-card-details">{student.i}</p>
-            {isActive(student.id) && (
+            {isActive(student.i) && (
                 <Box as="span" className="sign" color={isClicked ? "red.500" : "green.500"} fontSize="2xl">
-                    {isClicked ? '&#10006;' : '&#10004;'}
+                    {isClicked ? '❌' : '✅'}
                 </Box>
             )}
         </div>
