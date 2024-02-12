@@ -36,10 +36,6 @@ const SendCert: React.FC = () => {
             })
         }
     }
-<<<<<<< HEAD
-
-=======
->>>>>>> b8088d1ef2521897e10354b144c4f9e89664a04d
 
 
     useEffect(() => {
@@ -56,10 +52,6 @@ const SendCert: React.FC = () => {
     if (Id === '') {
         return
     }
-<<<<<<< HEAD
-})
-=======
->>>>>>> b8088d1ef2521897e10354b144c4f9e89664a04d
 
     return (
         <div>
@@ -91,15 +83,7 @@ const SendCert: React.FC = () => {
                 </div>
             </div>
         </div>
-<<<<<<< HEAD
-    </div>
-);
-
-};
-export default SendCert;
-=======
     );
-    };
+};
 
-    export default SendCert;
->>>>>>> b8088d1ef2521897e10354b144c4f9e89664a04d
+export default SendCert;

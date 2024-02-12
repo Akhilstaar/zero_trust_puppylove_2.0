@@ -6,21 +6,22 @@ let Certs: any[] = [];
 
 const SERVER_IP = process.env.SERVER_IP
 
-export function fetchResults() {
+export function get_result() {
     fetchStage2Keys();
     fetchCerts();
+    const Array: boolean[] = [false, false, false, false];
 
     const my_choices = [choices.r1, choices.r2, choices.r3, choices.r4]
 
     const my_key = get_Stage2Key(Id);
     if (my_key === -1) {
         console.log("Error: Key not found");
-        return;
+        return Array;
     }
     const my_cert = get_Certs(Id);
     if (my_cert === -1) {
         console.log("Error: Cert not found");
-        return;
+        return Array;
     }
 
     const My_Ka1 = BigInt(my_key.Ka1);
@@ -60,7 +61,6 @@ export function fetchResults() {
     const My_Real_Kd2 = My_Kd2 ^ My_CertD;
     const My_Real_Kd3 = My_Kd3 ^ My_CertD;
     const My_Real_Kd4 = My_Kd4 ^ My_CertD;
-    const Array: boolean[] = [false, false, false, false];
 
     for (const i in [0, 1, 2, 3]) {
         const key = get_Stage2Key(my_choices[i]);
