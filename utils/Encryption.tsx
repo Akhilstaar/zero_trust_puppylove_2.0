@@ -20,9 +20,9 @@ export async function GenerateKeys() {
 }
 
 export async function SharedSecret(PrivateK: string, publicKey: string) {
-  const publicKeyBuffer = Buffer.from(publicKey, 'base64').toString('hex');
+  const publicKeyBuffer = Buffer.from(publicKey, 'base64');
   const privateKeyBuffer = Buffer.from(PrivateK, 'base64').toString('hex');
-  const shared = secp256k1.getSharedSecret(publicKeyBuffer,privateKeyBuffer);
+  const shared = secp256k1.getSharedSecret(privateKeyBuffer,publicKeyBuffer);
   return shared;
 }
 

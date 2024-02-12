@@ -1,5 +1,5 @@
 import { SHA256, Decryption_AES } from "../Encryption"
-import { Set_PrivK, Set_PubK, Set_Data, Set_Gender, Set_Claims, Set_Submit, Set_Id } from "../UserData"
+import { Set_PrivK, Set_PubK, Set_S1Data, Set_S2Data, Set_Certgiven, Set_S1submit, Set_S2submit, Set_Id } from "../UserData"
 const SERVER_IP = process.env.SERVER_IP
 
 // Admin Permit to Send Hearts
@@ -10,10 +10,9 @@ export const handleLog = async (data: any, recaptchaToken: any) => {
     Set_Id(data.id);
     const myHeaders = new Headers();
     myHeaders.append("g-recaptcha-response", recaptchaToken);
-    console.log(recaptchaToken)
     const passHash = await SHA256(data.password);
     const bdy = JSON.stringify({
-      _id: data.id,
+      id: data.id,
       passHash: passHash
     });
 
@@ -37,10 +36,13 @@ export const handleLog = async (data: any, recaptchaToken: any) => {
     stage = res_json.stage
     Set_PrivK(pvtKey_login)
     Set_PubK(res_json.pubKey)
-    Set_Submit(res_json.submit)
-    await Set_Data(res_json.data)
+    Set_S1submit(res_json.s1submit)
+    Set_S2submit(res_json.s2submit)
+    Set_Certgiven(res_json.certgiven)
+    await Set_S1Data(res_json.s1data)
+    await Set_S2Data(res_json.s2data)
 
-    if (res_json.submit === true) {
+    if (res_json.s1submit === true) {
       if (stage === 1) {
         // TODO: Implement this function
         // await
@@ -50,7 +52,7 @@ export const handleLog = async (data: any, recaptchaToken: any) => {
       }
     }
 
-    return { "success": true, "stage": res_json.stage, "publish": res_json.publish }
+    return { "success": true, "stage": res_json.s1submit}
   }
   catch (err) {
     console.log(err)

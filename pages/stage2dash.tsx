@@ -12,7 +12,7 @@ import ClickedStudent from "@/components/clickedstudent";
 import "../app/globals.css";
 import GoToTop from '@/components/GoToTop';
 import { useRouter } from 'next/router';
-import Clear from '@/components/clear'; import { Send_M } from '@/utils/API_Calls/Send_Heart';
+import Clear from '@/components/clear'; import { Send_K } from '@/utils/API_Calls/Send_Heart';
 import { receiverIds, setUser, user } from '../utils/UserData';
 import { handle_Logout } from '@/utils/API_Calls/login_api';
 import { Id, Submit } from "../utils/UserData"
@@ -21,7 +21,7 @@ import Image from 'next/image';
 
 const SERVER_IP = process.env.SERVER_IP
 
-const Satge1dash = () => {
+const Satge2dash = () => {
     const router = useRouter();
     const toast = useToast();
     const [searchQuery, setSearchQuery] = useState("");
@@ -106,6 +106,7 @@ const Satge1dash = () => {
         }
     };
 
+    // TODO: Edit this function to only return a boolean array to stage2 submit...
     const handleUnselectStudent = async (studentRoll: string) => {
         const updatedStudents = clickedStudents.filter((s) => s.i !== studentRoll);
         setClickedStudents(updatedStudents)
@@ -128,7 +129,7 @@ const Satge1dash = () => {
             isClosable: true,
             render: ({ onClose }) => (
                 <Box bg="gray.100" borderRadius="md" p={4} textAlign="center">
-                    <p style={{ fontWeight: "bold", color: "black" }}>Are you sure you want to Submit Stage 1?, Once submitted You can't change your choices.</p>
+                    <p style={{ fontWeight: "bold", color: "black" }}>Are you sure you want to Submit stage 2?, Once submitted You can't change your choices.</p>
                     <Button colorScheme="black" color="gray.800" bg="gray.300" onClick={onClose}>No</Button>
                     <Button colorScheme="pink" ml={2} onClick={() => {
                         handleYes();
@@ -145,14 +146,8 @@ const Satge1dash = () => {
         if (Submit) {
             set_hearts_submitted(true);
         }
-        for (let j = 0; j < clickedStudents.length; j++) {
-            const id: string = clickedStudents[j].i
-            receiverIds[j] = id
-        }
-        for (let j = clickedStudents.length; j < 4; j++) {
-            receiverIds[j] = ''
-        }
-        const isValid = await Send_M(Id, receiverIds, Submit)
+
+        const isValid = await Send_K(Id, receiverIds, Submit)
         if (isValid && Submit) {
             toast({
                 title: 'HEARTS SENT',
@@ -183,6 +178,8 @@ const Satge1dash = () => {
     }
 
     const Logout = async () => {
+
+        // console.log(clickedStudents)
 
         await SendHeart_api(false);
         const isValid = await handle_Logout()
@@ -222,7 +219,7 @@ const Satge1dash = () => {
         const fetchActiveUsers = async () => {
             try {
                 const res = await fetch(
-                    `${SERVER_IP}/users/activeusers/stage1`, {
+                    `${SERVER_IP}/users/activeusers/stage2`, {
                     method: "GET",
                     credentials: "include",// For CORS
                 }
@@ -273,6 +270,7 @@ const Satge1dash = () => {
 
     if (Id == '') return;
 
+    // TODO: Edit this whole page to only return a boolean array to stage2 submit...
     return (
         <div className='box'>
             <Clear />
@@ -286,34 +284,7 @@ const Satge1dash = () => {
                 <div className='section-A'>
                     <div className='section_1'>
                         <div className="info">
-                            <div className="image-container">
-                                <div className="image-box">
-                                    <div className="profile" style={stylesss}></div>
-                                </div>
-                                {user && <div className="detail">
-                                    <div className="details-text-name">{user?.n}</div>
-                                    {/* <div className="details-text" >{user?.d}</div> */}
-                                    <div className="details-text" >{user?.i}</div>
-                                    {!hearts_submitted ? (
-                                        <motion.div
-                                            whileHover={{ scale: 1.1 }}
-                                            whileTap={{ scale: 0.9 }}
-                                            className={styles["heart-submit-button"]}
-                                            onClick={handleToast}
-                                            style={{ color: "white", margin: "12px 0px" }}
-                                        >
-                                            Submit
-                                        </motion.div>
-                                    ) : (
-                                        <motion.div
-                                            className={styles["heart-submit-button"]}
-                                            style={{ color: "white", backgroundColor: 'grey' }}
-                                        >
-                                            Submitted
-                                        </motion.div>
-                                    )}
-                                </div>}
-                            </div>
+
                         </div>
                     </div>
 
@@ -330,52 +301,11 @@ const Satge1dash = () => {
                             </motion.div>
 
                         </div>
-                        <div>
-                            {
-                                isShowStud ? (clickedStudents.length > 0 ?
-                                    <div>
-                                        <ClickedStudent clickedStudents={clickedStudents} onUnselectStudent={handleUnselectStudent} hearts_submitted={hearts_submitted} />
-                                    </div>
-                                    :
-                                    <h2>Use search to select someone</h2>
-                                ) : ""
-                            }
-                        </div>
+
                     </div>
                 </div>
                 <div className="section-B">
-                    <div className='section_3'><Hearts /></div>
-                    <div className="section_4">
-                        <div className="search-div">
-                            <BsSearch className="icon" size={20} />
-                            <input
-                                type="text"
-                                className="search-bar details-text "
-                                placeholder="Enter Name To Search."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                            />
-                        </div>
-                        <div className="student-container">
 
-                            {students.length == 0 &&
-                                <div>
-                                    {/* <p>Welcome to Puppy Love</p> */}
-                                    <Image
-                                        src={"/dashboard.jpeg"}
-                                        alt="Logo"
-                                        width={500}
-                                        height={30}
-                                    />
-                                </div>}
-
-                            {students.map((student) => (
-                                student.i != Id &&
-                                <Card key={student._id} student={student} onClick={handleButtonClick} clickedCheck={clickedStudents.includes(student)}
-                                    isActive={isActive} hearts_submitted={hearts_submitted} />
-                            ))}
-                        </div>
-                    </div>
                     <GoToTop />
                 </div>
             </div>
@@ -384,4 +314,4 @@ const Satge1dash = () => {
     )
 }
 
-export default Satge1dash
+export default Satge2dash

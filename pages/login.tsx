@@ -20,7 +20,7 @@ const LoginPage: React.FC = () => {
     const [data, setData] = useState({ id: "", password: "" });
     const [pass,setPass] = useState("password")
     const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
-    const CAPTCHA_KEY = process.env.CAPTCHA_KEY || "6Lc9nGspAAAAAG--84TvtYFiXLhk1kp70V38VWWj"
+    const CAPTCHA_KEY = process.env.CAPTCHA_KEY || "6LfxO2spAAAAADOgCFVJPvOKk_SFnw2wWvU0gx2G"
     //Server side Captcha Key is public anyway
 
     const router = useRouter()
@@ -41,23 +41,30 @@ const LoginPage: React.FC = () => {
         const status = await handleLog(data, recaptchaToken)
 
         if (status.success) {
-            // Heart Sending Period Over, Now user is doing last day login to give Confirmation for Matching or to see Results(later)
+            toast({
+                title: "Logged In Successfully!!",
+                status: 'success',
+                duration: 5000,
+                isClosable: true,
+                position: 'top',
+            })
+
+            console.log(status)
             switch (status.stage) {
-                case 0:
+                case false:
                     router.push(`/stage1dash`)
                     break;
-                case 1:
+                case true:
                     router.push(`/stage2dash`)
                     break;
-                case 2:
-                    if (status.publish) {
-                        router.push(`/result`)
-                    }
-                    else {
-                        router.push(`/confirmation`)
-                    }
-                    break;
             }
+            // if (status.publish) {
+            //     router.push(`/result`)
+            // }
+            // else {
+            //     router.push(`/confirmation`)
+            // }
+            // break;
         }
         else {
             toast({

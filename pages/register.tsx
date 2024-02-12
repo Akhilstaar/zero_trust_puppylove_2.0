@@ -47,7 +47,7 @@ const RegisterPage: React.FC = () => {
             setId("");
             toast({
                 title: 'Email sent Successfully',
-                status: 'error',
+                status: 'success',
                 duration: 5000,
                 isClosable: true,
                 position: 'top',
@@ -57,7 +57,7 @@ const RegisterPage: React.FC = () => {
         switch (status_code) {
             case 403:
                 toast({
-                    title: 'Invalid Roll No entered',
+                    title: 'Invalid Captcha OR Roll No entered',
                     status: 'error',
                     duration: 5000,
                     isClosable: true,
@@ -68,7 +68,7 @@ const RegisterPage: React.FC = () => {
                 router.push('./login')
                 toast({
                     title: 'You are already Registered. Login instead',
-                    status: 'error',
+                    status: 'success',
                     duration: 5000,
                     isClosable: true,
                     position: 'top',

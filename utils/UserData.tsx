@@ -1,45 +1,39 @@
 import { Student } from "./API_Calls/search"
+import { Decryption_AES } from "./Encryption"
 
 export let Id = ''
 export let PubK = ''
 export let PrivK = ''
 export let Data = ''
 export let Submit = false
+export let S1submit = false
+export let S2submit = false
+export let Certgiven = false
 
 // IDs of receivers of heart from User
 export let receiverIds: string[] = []
-export let Matched_Ids: string[] = []
-export let Matches: Student[] = []
-export let admin_pulished: boolean = false;
 export let user: Student = {} as Student;
 
-export let batchWiseMatches = {}
 export let batchWiseResgis = {}
 export let femaleRegistration = ''
 export let maleRegistration = ''
 export let totalRegistration = ''
 export let totalMatches = ''
-
 export const setStats = (StatsVariable: any, stats: any) => {
     StatsVariable = stats;
 }
 
-export const setMatches = (student_matched: any) => {
-    if (!Matches.includes(student_matched)) {
-        Matches.push(student_matched);
-    }
-};
 export const setUser = (student_user: Student) => {
     user = student_user;
 };
 
-export const setAdminPublished = (publish: boolean) => {
-    admin_pulished = publish;
-};
+// export const setAdminPublished = (publish: boolean) => {
+//     admin_pulished = publish;
+// };
 
-export const setMatchedIds = (newIds: string[]) => {
-    Matched_Ids = newIds;
-};
+// export const setMatchedIds = (newIds: string[]) => {
+//     Matched_Ids = newIds;
+// };
 
 export function Set_Id(id: string) {
     Id = id
@@ -57,32 +51,102 @@ export function Set_Submit(submit: boolean) {
     Submit = submit
 }
 
-// Send Heart
-export interface Heart {
-    enc: string;
-    sha_encrypt: string;
-    id_encrypt: string;
+export function Set_S1submit(submit: boolean) {
+    S1submit = submit
 }
 
-export interface Hearts {
-    heart1: Heart;
-    heart2: Heart;
-    heart3: Heart;
-    heart4: Heart;
+export function Set_S2submit(submit: boolean) {
+    S2submit = submit
 }
 
-export let Sent_Hearts: Hearts;
+export function Set_Certgiven(submit: boolean) {
+    Certgiven = submit
+}
 
-export async function Set_Data(data: string) {
+export interface Choices {
+    r1: string;
+    r2: string;
+    r3: string;
+    r4: string;
+    recv1: string;
+    recv2: string;
+    recv3: string;
+    recv4: string;
+}
+
+export interface Cert {
+    cert1: string;
+    cert2: string;
+    cert3: string;
+    cert4: string;
+}
+
+export let choices: Choices = {
+    r1: '',
+    r2: '',
+    r3: '',
+    r4: '',
+    recv1: '',
+    recv2: '',
+    recv3: '',
+    recv4: ''
+};
+
+export let cert: Cert = {
+    cert1: '',
+    cert2: '',
+    cert3: '',
+    cert4: '',
+};
+
+export async function Set_S1Data(data_enc: string) {
 
     // Initializing Every State Varibale to 0 incase user Logins again immediately after Logout
     for (let i = 0; i < 4; i++) {
         receiverIds[i] = ''
     }
 
-    if (data === "FIRST_LOGIN") {
+    if (data_enc === "FIRST_LOGIN") {
         return
     }
-    // TODO: Add functions for Decryption of data
+
+    try {
+        // TODO: Add proper decryption logic based on your encryption library
+        let data = await Decryption_AES(data_enc, PrivK);
+        let decrypted_data = JSON.parse(data);
+
+        choices.r1 = decrypted_data.r1;
+        choices.r2 = decrypted_data.r2;
+        choices.r3 = decrypted_data.r3;
+        choices.r4 = decrypted_data.r4;
+        choices.recv1 = decrypted_data.recv1;
+        choices.recv2 = decrypted_data.recv2;
+        choices.recv3 = decrypted_data.recv3;
+        choices.recv4 = decrypted_data.recv4;
+
+    } catch (error) {
+        console.error('Error decrypting data:', error);
+    }
     return
+}
+
+export async function Set_S2Data(data_enc: string) {
+    if (data_enc === "Not_Sent_YET") {
+        return
+    }
+
+    try {
+        let data = await Decryption_AES(data_enc, PrivK);
+        let decrypted_data = JSON.parse(data);
+        // TODO: Assign variables in s2 decrypted data
+        cert.cert1 = decrypted_data.cert1;
+        cert.cert2 = decrypted_data.cert2;
+        cert.cert3 = decrypted_data.cert3;
+        cert.cert4 = decrypted_data.cert4;
+
+    } catch (error) {
+        console.error('Error decrypting data:', error);
+    }
+    return
+
 }

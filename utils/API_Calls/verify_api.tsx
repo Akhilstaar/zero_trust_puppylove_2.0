@@ -16,7 +16,6 @@ export const handleVerifyOTP = async (user: any) => {
         passHash: passHash,
         pubKey: Keys.pubKey,
         privKey: privKey_encrypt,
-        data: "FIRST_LOGIN"
       }),
 
       headers: {

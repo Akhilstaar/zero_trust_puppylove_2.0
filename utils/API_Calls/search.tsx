@@ -18,9 +18,6 @@ interface Query {
 	name: string;
 }
 
-
-
-
 var students: Student[] = [];
 var new_students: any[] | undefined = undefined;
 var config = {
