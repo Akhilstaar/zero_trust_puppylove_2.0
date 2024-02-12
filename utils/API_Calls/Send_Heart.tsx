@@ -1,5 +1,5 @@
 import { SharedSecret, RandInt, Encryption_AES } from "../Encryption"
-import { choices, Set_Submit, PrivK } from "../UserData"
+import { choices, Set_Submit, PrivK, S1submit, Set_S1submit } from "../UserData"
 import sha256 from 'crypto-js/sha256';
 
 const SERVER_IP = process.env.SERVER_IP
@@ -86,10 +86,10 @@ export const Send_M = async (senderId: string, receiverIds: string[], Submit: bo
             method: "POST",
             credentials: "include",  // For CORS
             body: JSON.stringify({
-                M1: hearts[0].toString(),
-                M2: hearts[1].toString(),
-                M3: hearts[2].toString(),
-                M4: hearts[3].toString(),
+                m1: hearts[0].toString(),
+                m2: hearts[1].toString(),
+                m3: hearts[2].toString(),
+                m4: hearts[3].toString(),
                 S1Data: data_encrypt
             }),
         }
@@ -99,17 +99,18 @@ export const Send_M = async (senderId: string, receiverIds: string[], Submit: bo
         }
 
         console.log(hearts)
+        console.log(Submit)
         if (Submit) {
-            Set_Submit(Submit)
+            Set_S1submit(Submit)
             const res = await fetch(
                 `${SERVER_IP}/users/sendheart/stage1`, {
                 method: "POST",
                 credentials: "include",  // For CORS
                 body: JSON.stringify({
-                    M1: hearts[0].toString(),
-                    M2: hearts[1].toString(),
-                    M3: hearts[2].toString(),
-                    M4: hearts[3].toString(),
+                    m1: hearts[0].toString(),
+                    m2: hearts[1].toString(),
+                    m3: hearts[2].toString(),
+                    m4: hearts[3].toString(),
                     S1Data: data_encrypt
                 }),
             }

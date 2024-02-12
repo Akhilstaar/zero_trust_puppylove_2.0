@@ -18,6 +18,7 @@ import { handle_Logout } from '@/utils/API_Calls/login_api';
 import { Id, S1submit, S2submit } from "../utils/UserData"
 import { search_students, Student } from '@/utils/API_Calls/search';
 import Image from 'next/image';
+import Stage2list from '@/components/stage2list';
 
 const SERVER_IP = process.env.SERVER_IP
 
@@ -30,7 +31,8 @@ const Stage2dash = () => {
     const [hearts_submitted, set_hearts_submitted] = useState(S2submit);
     const [clickedStudents, setClickedStudents] = useState<Student[]>([]);
     const [isShowStud, setShowStud] = useState(false);
-
+    const [stage2Bool, set_stage2Bool] = useState<boolean[]>([]);
+    // const stage2Bool = [];
 
     useEffect(() => {
         toast.closeAll()
@@ -64,8 +66,10 @@ const Stage2dash = () => {
         for (let i = 0; i < 4; i++) {
             const id = receiverIds[i]
             if (id === '') {
+                set_stage2Bool([...stage2Bool, false])
                 continue
             }
+            set_stage2Bool([...stage2Bool, true])
             const data = search_students(id);
             if (data == undefined) {
                 return;
@@ -112,9 +116,10 @@ const Stage2dash = () => {
         });
     };
 
-    const handleUnselectStudent = async (studentRoll: string) => {
-        const updatedStudents = clickedStudents.filter((s) => s.i !== studentRoll);
-        setClickedStudents(updatedStudents)
+    const onBoolChange = async (index: number, value: boolean) => {
+        const updatedStage2Bool = [...stage2Bool];
+        updatedStage2Bool[index] = value;
+        set_stage2Bool(updatedStage2Bool);
     };
 
     const SendHeart_api = async (Submit: boolean) => {
@@ -124,7 +129,7 @@ const Stage2dash = () => {
         if (S2submit) {
             set_hearts_submitted(true);
         }
-        const isValid = await Send_K(Id, receiverIds, S2submit)
+        const isValid = await Send_K(Id, stage2Bool, S2submit)
         if (isValid && S2submit) {
             toast({
                 title: 'HEARTS SENT',
@@ -196,6 +201,34 @@ const Stage2dash = () => {
     const isActive = (id: string) => {
         return activeUsers.includes(id);
     };
+
+    useEffect(() => {
+        const fetchActiveUsers = async () => {
+            try {
+                const res = await fetch(
+                    `${SERVER_IP}/users/activeusers/stage2`, {
+                    method: "GET",
+                    credentials: "include",// For CORS
+                }
+                )
+                if (!res.ok) {
+                    throw new Error(`HTTP Error: ${res.status} - ${res.statusText}`);
+                }
+                const active = await res.json()
+                console.log(active)
+                setActiveUsers(active.users);
+                // console.log(activeUsers)
+            }
+            catch (err) {
+                // Cannot fetch Active users
+                console.log(err)
+            }
+        }
+
+        fetchActiveUsers()
+    }, []);
+
+    console.log(activeUsers)
 
     useEffect(() => {
         fetchStudents();
@@ -289,7 +322,7 @@ const Stage2dash = () => {
                             {
                                 isShowStud ? (clickedStudents.length > 0 ?
                                     <div>
-                                        <ClickedStudent clickedStudents={clickedStudents} onUnselectStudent={handleUnselectStudent} hearts_submitted={hearts_submitted} />
+                                        <Stage2list clickedStudents={clickedStudents} stage2Bool={stage2Bool} onBoolChange={onBoolChange} isActive={isActive} />
                                     </div>
                                     :
                                     <h2>Use search to select someone</h2>
