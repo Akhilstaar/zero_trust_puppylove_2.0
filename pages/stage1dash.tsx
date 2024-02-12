@@ -115,7 +115,6 @@ const Satge1dash = () => {
     }
 
     const handleYes = async () => {
-        console.log("YES")
         await Handle_SendHeart();
         toast.closeAll();
     };

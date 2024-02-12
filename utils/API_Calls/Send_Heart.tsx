@@ -86,10 +86,10 @@ export const Send_M = async (senderId: string, receiverIds: string[], Submit: bo
             method: "POST",
             credentials: "include",  // For CORS
             body: JSON.stringify({
-                M1: hearts[0].toString(),
-                M2: hearts[1].toString(),
-                M3: hearts[2].toString(),
-                M4: hearts[3].toString(),
+                m1: hearts[0].toString(),
+                m2: hearts[1].toString(),
+                m3: hearts[2].toString(),
+                m4: hearts[3].toString(),
                 S1Data: data_encrypt
             }),
         }
@@ -106,10 +106,10 @@ export const Send_M = async (senderId: string, receiverIds: string[], Submit: bo
                 method: "POST",
                 credentials: "include",  // For CORS
                 body: JSON.stringify({
-                    M1: hearts[0].toString(),
-                    M2: hearts[1].toString(),
-                    M3: hearts[2].toString(),
-                    M4: hearts[3].toString(),
+                    m1: hearts[0].toString(),
+                    m2: hearts[1].toString(),
+                    m3: hearts[2].toString(),
+                    m4: hearts[3].toString(),
                     S1Data: data_encrypt
                 }),
             }

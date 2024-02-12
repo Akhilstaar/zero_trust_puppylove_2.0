@@ -50,21 +50,18 @@ const LoginPage: React.FC = () => {
             })
 
             console.log(status)
-            switch (status.stage) {
-                case false:
-                    router.push(`/stage1dash`)
-                    break;
-                case true:
-                    router.push(`/stage2dash`)
-                    break;
+            if (!status.stage1) {
+                router.push(`/stage1dash`)
             }
-            // if (status.publish) {
-            //     router.push(`/result`)
-            // }
-            // else {
-            //     router.push(`/confirmation`)
-            // }
-            // break;
+            if (!status.stage2) {
+                router.push(`/stage2dash`)
+            }
+            if (!status.certgiven) {
+                router.push(`/sendcert`)
+            }
+            else{
+                router.push(`/result`)
+            }
         }
         else {
             toast({
