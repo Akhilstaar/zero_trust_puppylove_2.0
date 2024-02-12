@@ -36,7 +36,7 @@ const SendCert: React.FC = () => {
             })
         }
     }
-}
+
 
 useEffect(() => {
     toast.closeAll()
@@ -49,9 +49,6 @@ useEffect(() => {
         router.push(`/login`)
     }
 })
-if (Id === '') {
-    return
-}
 
 return (
     <div>
@@ -84,6 +81,6 @@ return (
         </div>
     </div>
 );
-};
 
+};
 export default SendCert;

@@ -63,7 +63,7 @@ const Stage2dash = () => {
     const fetchAndSelectStudents = async () => {
         const selected: Student[] = [];
         const updatedStage2Bool = [false,false,false,false]
-    
+
         for (let i = 0; i < 4; i++) {
             const id = receiverIds[i]
             if (id === '') {
@@ -81,7 +81,7 @@ const Stage2dash = () => {
                 selected.push(student);
             }
         }
-        console.log(updatedStage2Bool)
+        // console.log(updatedStage2Bool)
         set_stage2Bool(updatedStage2Bool)
         setClickedStudents([...clickedStudents, ...selected])
     }
@@ -124,7 +124,7 @@ const Stage2dash = () => {
         const updatedStage2Bool = [...stage2Bool];
         updatedStage2Bool[index] = value;
         set_stage2Bool(updatedStage2Bool);
-        console.log(stage2Bool)
+        // console.log(stage2Bool)
     };
 
     const SendHeart_api = async (Submit: boolean) => {

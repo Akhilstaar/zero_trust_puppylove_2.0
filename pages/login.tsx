@@ -49,17 +49,16 @@ const LoginPage: React.FC = () => {
                 position: 'top',
             })
 
-            console.log(status)
             if (!status.stage1) {
                 router.push(`/stage1dash`)
             }
-            if (!status.stage2) {
+            else if (!status.stage2) {
                 router.push(`/stage2dash`)
             }
-            if (!status.certgiven) {
+            else if (!status.certgiven) {
                 router.push(`/sendcert`)
             }
-            else{
+            else if(status.stage1 && status.stage2 && status.certgiven){
                 router.push(`/result`)
             }
         }
