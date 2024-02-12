@@ -31,7 +31,7 @@ const Stage2Card = ({ student, onBoolChange, stage2Bool, index, isActive }: any)
             <p className="select-card-details">{student.i}</p>
             {isActive(student.i) && (
                 <Box as="span" className="sign" color={isClicked ?"green.500": "red.500" } fontSize="2xl">
-                    {isClicked ? '✅':'❌' }
+                    {isClicked ? 'Send Heart ✅':'Dont Send Heart ❌' }
                 </Box>
             )}
         </div>

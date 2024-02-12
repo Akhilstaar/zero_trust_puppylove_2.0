@@ -181,10 +181,6 @@ export const Send_K = async (senderId: string, receiverIds: boolean[], Submit: b
         const m13 = me_m.m3;
         const m14 = me_m.m4;
         const myChoices: string[] = [m11, m12, m13, m14]
-        console.log("myChoices : ")
-        console.log(myChoices);
-        console.log("myChoices : ")
-        console.log(s1Choice)
         const x: string[] = []
 
         console.log(m11, m12, m13, m14);
@@ -213,9 +209,6 @@ export const Send_K = async (senderId: string, receiverIds: boolean[], Submit: b
             const m24 = BigInt(my_m.m4);
 
             const mc = BigInt(myChoices[i]);  // IDK why i needed to do it like this :/ my typescript sucks......  ....  ..  .
-            console.log("mc");
-            console.log(mc);
-            console.log(m21);
             // TODO: Maybe Implement something like this kinda check in some way :}
             // TODO: Ie. make it recalculate the m & shared hash and them compute it & compare.
             // if(mc != somthing_i_posted){

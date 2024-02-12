@@ -62,7 +62,7 @@ const Stage2dash = () => {
 
     const fetchAndSelectStudents = async () => {
         const selected: Student[] = [];
-        const updatedStage2Bool = [false,false,false,false]
+        const updatedStage2Bool = [false, false, false, false]
 
         for (let i = 0; i < 4; i++) {
             const id = receiverIds[i]
@@ -143,6 +143,7 @@ const Stage2dash = () => {
                 isClosable: true,
                 position: 'top',
             })
+            router.push('/login')
         }
         else if (!isValid && Submit) {
             toast({
@@ -310,45 +311,16 @@ const Stage2dash = () => {
                 <div className="section-B">
                     <div className='section_3'>
                         <h1>STAGE - 2</h1>
+                        <h4> Submitting heart when the receiver's profile is colourless will not send the heart to the colourless receiver.</h4>
                     </div>
-                    <div className='section_2'>
-                        <div className='logout-button-div'>
-                            <motion.div
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.9 }}
-                                className='hide-show-btn'
-                                style={{ marginBottom: "8px", position: "sticky", top: "0px", cursor: "pointer" }}
-                                onClick={handleShowStud}
-                            >
-                                {isShowStud ? "Hide" : "Show"}
-                            </motion.div>
-                        </div>
-                        <div>
-                            {
-                                isShowStud ? (clickedStudents.length > 0 ?
-                                    <div>
-                                        <Stage2list clickedStudents={clickedStudents} stage2Bool={stage2Bool} onBoolChange={onBoolChange} isActive={isActive} />
-                                    </div>
-                                    :
-                                    <h2>Use search to select someone</h2>
-                                ) : ""
-                            }
-                        </div>
-                    </div>
+                    <Stage2list clickedStudents={clickedStudents} stage2Bool={stage2Bool} onBoolChange={onBoolChange} isActive={isActive} />
                     <div>
-                        {students.length == 0 &&
-                            <div>
-                                {/* <p>Welcome to Puppy Love</p> */}
-                                <Image
-                                    src={"/dashboard.jpeg"}
-                                    alt="Logo"
-                                    width={500}
-                                    height={30}
-                                />
-                            </div>}
-                        {
-
-                        }
+                        <h2>Instructions :</h2>
+                        <p>1. Submitting heart when the receiver's profile is colourless will not send the heart to the colourless receiver.</p>
+                        <p>2. Once, the receiver passes stage 1 (ie. sends hearts), their profile will turn coloured and you can then choose to send or unsend the heart.</p>
+                        <p>3. You can submit your choices only once.</p>
+                        <p>4. Once submitted, you can't change your choices.</p>
+                        <p>5. Choices are encrypted & saved automatically in the backend.</p>
                     </div>
                     <GoToTop />
                 </div>

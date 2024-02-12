@@ -36,6 +36,7 @@ const ResultPage = () => {
     useEffect(() => {
         const show_result = async () => {
             const match_bool_array = await get_result();
+            console.log(match_bool_array)
             for (let j = 0; j < 4; j++) {
                 if (match_bool_array[j] == true) {
                     const data: Array<Student> = search_students(choices[`r${j + 1}` as keyof Choices])
@@ -113,7 +114,7 @@ const ResultPage = () => {
                             </div>
                         </div>
                     </div>
-                    <div className='section_2r'><Hearts /></div>
+                    {/* <div className='section_2r'><Hearts /></div> */}
 
                 </div>
                 <div className="section-Br">
@@ -126,7 +127,7 @@ const ResultPage = () => {
                         :
 
                         <div className='section_3r' style={{ display: "flex", justifyContent: "center" }}>
-                            <h1>Sorry! No matches to show</h1>
+                            <h1>Sorry! No matches yet, please try again after some time.</h1>
                         </div>
                     }
                 </div>

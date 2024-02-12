@@ -6,6 +6,36 @@ let Certs: any[] = [];
 
 const SERVER_IP = process.env.SERVER_IP
 
+async function fetchStage2Keys() {
+    const res = await fetch(
+        `${SERVER_IP}/users/fetchStage2Keys`, {
+        method: "GET",
+        credentials: "include"  // For CORS
+    });
+
+    if (!res.ok) {
+        throw new Error(`HTTP Error: ${res.status} - ${res.statusText}`);
+    }
+
+    const res_json = await res.json();
+    Stage2Keys = res_json;
+}
+
+async function fetchCerts() {
+    const res = await fetch(
+        `${SERVER_IP}/users/fetchStage1Keys`, {
+        method: "GET",
+        credentials: "include"  // For CORS
+    });
+
+    if (!res.ok) {
+        throw new Error(`HTTP Error: ${res.status} - ${res.statusText}`);
+    }
+
+    const res_json = await res.json();
+    Certs = res_json;
+}
+
 export function get_result() {
     fetchStage2Keys();
     fetchCerts();
@@ -139,34 +169,4 @@ export function get_Certs(id: string) {
         }
     }
     return -1;
-}
-
-async function fetchStage2Keys() {
-    const res = await fetch(
-        `${SERVER_IP}/users/fetchStage2Keys`, {
-        method: "GET",
-        credentials: "include"  // For CORS
-    });
-
-    if (!res.ok) {
-        throw new Error(`HTTP Error: ${res.status} - ${res.statusText}`);
-    }
-
-    const res_json = await res.json();
-    Stage2Keys = res_json;
-}
-
-async function fetchCerts() {
-    const res = await fetch(
-        `${SERVER_IP}/users/fetchStage1Keys`, {
-        method: "GET",
-        credentials: "include"  // For CORS
-    });
-
-    if (!res.ok) {
-        throw new Error(`HTTP Error: ${res.status} - ${res.statusText}`);
-    }
-
-    const res_json = await res.json();
-    Certs = res_json;
 }

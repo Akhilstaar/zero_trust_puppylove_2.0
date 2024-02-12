@@ -159,6 +159,7 @@ const Satge1dash = () => {
                 isClosable: true,
                 position: 'top',
             })
+            router.push('/login')
         }
         else if (!isValid && Submit) {
             toast({
