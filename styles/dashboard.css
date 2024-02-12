@@ -84,13 +84,19 @@
     overflow-x: scroll;
 }
 
-.section_3{
+.section_3 {
     grid-area: section_3;
-    background-color: white;
     border-radius: 10px;
+    background-color: #FAF9F6;
     padding: 1rem;
+    text-align: center;
 }
 
+.section_3 h1 {
+    font-size: 24px;
+    color: #8CABFF;
+    font-weight: bold;
+}
 .section_4{
     max-width: 100%;
     display: flex;

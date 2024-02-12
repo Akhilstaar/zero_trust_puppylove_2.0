@@ -7,7 +7,6 @@ import styles from "../styles/login.module.css";
 import "../styles/dashboard.css"
 import { BsSearch } from "react-icons/bs";
 import Card from "@/components/card";
-import Hearts from "@/components/Hearts";
 import ClickedStudent from "@/components/clickedstudent";
 import "../app/globals.css";
 import GoToTop from '@/components/GoToTop';
@@ -15,7 +14,7 @@ import { useRouter } from 'next/router';
 import Clear from '@/components/clear'; import { Send_M } from '@/utils/API_Calls/Send_Heart';
 import { receiverIds, setUser, user } from '../utils/UserData';
 import { handle_Logout } from '@/utils/API_Calls/login_api';
-import { Id, Submit } from "../utils/UserData"
+import { Id, S1submit } from "../utils/UserData"
 import { search_students, Student } from '@/utils/API_Calls/search';
 import Image from 'next/image';
 
@@ -27,7 +26,7 @@ const Satge1dash = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [students, setStudents] = useState<Student[]>([]);
     const [activeUsers, setActiveUsers] = useState<string[]>([]);
-    const [hearts_submitted, set_hearts_submitted] = useState(Submit);
+    const [hearts_submitted, set_hearts_submitted] = useState(S1submit);
     const [clickedStudents, setClickedStudents] = useState<Student[]>([]);
     const [isShowStud, setShowStud] = useState(false);
 
@@ -142,7 +141,7 @@ const Satge1dash = () => {
         if (hearts_submitted) {
             return;
         }
-        if (Submit) {
+        if (S1submit) {
             set_hearts_submitted(true);
         }
         for (let j = 0; j < clickedStudents.length; j++) {
@@ -152,8 +151,8 @@ const Satge1dash = () => {
         for (let j = clickedStudents.length; j < 4; j++) {
             receiverIds[j] = ''
         }
-        const isValid = await Send_M(Id, receiverIds, Submit)
-        if (isValid && Submit) {
+        const isValid = await Send_M(Id, receiverIds, S1submit)
+        if (isValid && S1submit) {
             toast({
                 title: 'HEARTS SENT',
                 status: 'success',
@@ -162,7 +161,7 @@ const Satge1dash = () => {
                 position: 'top',
             })
         }
-        else if (!isValid && Submit) {
+        else if (!isValid && S1submit) {
             toast({
                 title: 'Error occurred , Hearts not sent',
                 status: 'error',
@@ -171,7 +170,7 @@ const Satge1dash = () => {
                 position: 'top',
             })
         }
-        else if (!isValid && !Submit) {
+        else if (!isValid && !S1submit) {
             toast({
                 title: 'Choices not saved',
                 status: 'error',
@@ -344,7 +343,10 @@ const Satge1dash = () => {
                     </div>
                 </div>
                 <div className="section-B">
-                    <div className='section_3'><Hearts /></div>
+                    {/* <div className='section_3'><Hearts /></div> */}
+                    <div className='section_3'>
+                        <h1>STAGE - 1</h1>
+                    </div>
                     <div className="section_4">
                         <div className="search-div">
                             <BsSearch className="icon" size={20} />

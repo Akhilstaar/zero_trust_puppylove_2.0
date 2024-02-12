@@ -41,6 +41,7 @@ export const handleLog = async (data: any, recaptchaToken: any) => {
     Set_Certgiven(res_json.certgiven)
     await Set_S1Data(res_json.s1data)
     await Set_S2Data(res_json.s2data)
+    console.log(pvtKey_login)
 
     if (res_json.s1submit === true) {
       if (stage === 1) {
@@ -51,6 +52,9 @@ export const handleLog = async (data: any, recaptchaToken: any) => {
         // TODO: Implement this function
       }
     }
+
+    // For Debugging
+    // await new Promise(resolve => setTimeout(resolve, 10000));
 
     return { "success": true, "stage": res_json.s1submit}
   }

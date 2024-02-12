@@ -36,6 +36,9 @@ const Card = ({ student, onClick, hearts_submitted }: any) => {
       ) : (
         <div className="carddetails">
           Hearts Submitted
+          {/* <button className="select-button" onClick={clicked}>
+            Send Heart
+          </button> */}
         </div>
       )}
     </div>

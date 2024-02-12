@@ -112,18 +112,22 @@ export async function Set_S1Data(data_enc: string) {
 
     try {
         // TODO: Add proper decryption logic based on your encryption library
-        let data = await Decryption_AES(data_enc, PrivK);
-        let decrypted_data = JSON.parse(data);
-
-        choices.r1 = decrypted_data.r1;
-        choices.r2 = decrypted_data.r2;
-        choices.r3 = decrypted_data.r3;
-        choices.r4 = decrypted_data.r4;
-        choices.recv1 = decrypted_data.recv1;
-        choices.recv2 = decrypted_data.recv2;
-        choices.recv3 = decrypted_data.recv3;
-        choices.recv4 = decrypted_data.recv4;
-
+        let decoded_data = await Decryption_AES(data_enc, PrivK);
+        let data = JSON.parse(Buffer.from(decoded_data, 'base64').toString('utf-8'));
+        choices.r1 = data.r1;
+        choices.r2 = data.r2;
+        choices.r3 = data.r3;
+        choices.r4 = data.r4;
+        choices.recv1 = data.recv1;
+        choices.recv2 = data.recv2;
+        choices.recv3 = data.recv3;
+        choices.recv4 = data.recv4;
+        receiverIds[0] = choices.recv1;
+        receiverIds[1] = choices.recv2;
+        receiverIds[2] = choices.recv3;
+        receiverIds[3] = choices.recv4;
+        // console.log(receiverIds)
+        // console.log(choices)
     } catch (error) {
         console.error('Error decrypting data:', error);
     }
@@ -136,14 +140,16 @@ export async function Set_S2Data(data_enc: string) {
     }
 
     try {
-        let data = await Decryption_AES(data_enc, PrivK);
-        let decrypted_data = JSON.parse(data);
-        // TODO: Assign variables in s2 decrypted data
-        cert.cert1 = decrypted_data.cert1;
-        cert.cert2 = decrypted_data.cert2;
-        cert.cert3 = decrypted_data.cert3;
-        cert.cert4 = decrypted_data.cert4;
+        let decoded_data = await Decryption_AES(data_enc, PrivK);
+        let data = JSON.parse(Buffer.from(decoded_data, 'base64').toString('utf-8'));
 
+        // TODO: Assign variables in s2 decrypted data
+        cert.cert1 = data.cert1;
+        cert.cert2 = data.cert2;
+        cert.cert3 = data.cert3;
+        cert.cert4 = data.cet4;
+
+        // console.log(cert.cert1, cert.cert2, cert.cert3, cert.cert4)
     } catch (error) {
         console.error('Error decrypting data:', error);
     }

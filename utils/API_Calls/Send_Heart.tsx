@@ -40,10 +40,12 @@ export const Send_M = async (senderId: string, receiverIds: string[], Submit: bo
             isPubliKAvail = true
         }
 
-        const r1 = await sha256((await RandInt()).toString());
-        const r2 = await sha256((await RandInt()).toString());
-        const r3 = await sha256((await RandInt()).toString());
-        const r4 = await sha256((await RandInt()).toString());
+        const r1 = choices.r1 || await sha256((await RandInt()).toString());
+        const r2 = choices.r2 || await sha256((await RandInt()).toString());
+        const r3 = choices.r3 || await sha256((await RandInt()).toString());
+        const r4 = choices.r3 || await sha256((await RandInt()).toString());
+        console.log(r1, r2, r3, r4);
+        console.log(receiverIds);
         const hearts: BigInt[] = []
         const R: any[] = [r1, r2, r3, r4]
 
@@ -57,9 +59,10 @@ export const Send_M = async (senderId: string, receiverIds: string[], Submit: bo
             recv3: receiverIds[2],
             recv4: receiverIds[3],
         }
+        const base_enc_data = Buffer.from(JSON.stringify(data)).toString('base64');
 
-        let data_encrypt = await Encryption_AES(data.toString(), PrivK);
-        console.log(receiverIds)
+        let data_encrypt = await Encryption_AES(base_enc_data, PrivK);
+        // console.log(receiverIds)
         for (const i in [0, 1, 2, 3]) {
             const id = receiverIds[i]
             if (id === '') {
@@ -165,7 +168,7 @@ export const Send_K = async (senderId: string, receiverIds: boolean[], Submit: b
         const R: any[] = [choices.r1, choices.r2, choices.r3, choices.r4]
         const s1Choice: any[] = [choices.recv1, choices.recv2, choices.recv3, choices.recv4]
         const Certs: string[] = []
-        const me_m = get_S1Keys(senderId);
+        const me_m = JSON.parse(get_S1Keys(senderId));
         const m11 = BigInt('0x' + me_m.m1);
         const m12 = BigInt('0x' + me_m.m2);
         const m13 = BigInt('0x' + me_m.m3);
@@ -188,7 +191,7 @@ export const Send_K = async (senderId: string, receiverIds: boolean[], Submit: b
             }
             const id = s1Choice[i]
 
-            const my_m = get_S1Keys(id);
+            const my_m = JSON.parse(get_S1Keys(id));
             if (my_m === -1) {
                 console.log("S1 hearts not sent by receiver !!");
                 continue
@@ -237,7 +240,8 @@ export const Send_K = async (senderId: string, receiverIds: boolean[], Submit: b
             cert3: Certs[2],
             cert4: Certs[3],
         }
-        let cert_encrypt = await Encryption_AES(Cert_data.toString(), PrivK);
+        const base_enc_crt = Buffer.from(JSON.stringify(Cert_data)).toString('base64');
+        let cert_encrypt = await Encryption_AES(base_enc_crt.toString(), PrivK);
 
         const res = await fetch(
             `${SERVER_IP}/users/sendheartvirtual/stage2`, {

@@ -15,19 +15,19 @@ import { useRouter } from 'next/router';
 import Clear from '@/components/clear'; import { Send_K } from '@/utils/API_Calls/Send_Heart';
 import { receiverIds, setUser, user } from '../utils/UserData';
 import { handle_Logout } from '@/utils/API_Calls/login_api';
-import { Id, Submit } from "../utils/UserData"
+import { Id, S1submit, S2submit } from "../utils/UserData"
 import { search_students, Student } from '@/utils/API_Calls/search';
 import Image from 'next/image';
 
 const SERVER_IP = process.env.SERVER_IP
 
-const Satge2dash = () => {
+const Stage2dash = () => {
     const router = useRouter();
     const toast = useToast();
     const [searchQuery, setSearchQuery] = useState("");
     const [students, setStudents] = useState<Student[]>([]);
     const [activeUsers, setActiveUsers] = useState<string[]>([]);
-    const [hearts_submitted, set_hearts_submitted] = useState(Submit);
+    const [hearts_submitted, set_hearts_submitted] = useState(S2submit);
     const [clickedStudents, setClickedStudents] = useState<Student[]>([]);
     const [isShowStud, setShowStud] = useState(false);
 
@@ -82,35 +82,8 @@ const Satge2dash = () => {
         fetchAndSelectStudents()
     }, [])
 
-    const handleButtonClick = async (studentRoll: string) => {
-        if (clickedStudents.length >= 4) {
-            toast({
-                title: 'You cannot select more than 4 students',
-                status: 'error',
-                duration: 5000,
-                isClosable: true,
-            })
-            return;
-        }
-        const student = students.find((s) => s.i === studentRoll);
-
-        if (student && !clickedStudents.find((s) => s.i === studentRoll)) {
-            setClickedStudents([...clickedStudents, student])
-        } else {
-            toast({
-                title: 'This student has already been clicked!',
-                status: 'error',
-                duration: 5000,
-                isClosable: true,
-            })
-        }
-    };
-
     // TODO: Edit this function to only return a boolean array to stage2 submit...
-    const handleUnselectStudent = async (studentRoll: string) => {
-        const updatedStudents = clickedStudents.filter((s) => s.i !== studentRoll);
-        setClickedStudents(updatedStudents)
-    };
+
 
     const Handle_SendHeart = async () => {
         await SendHeart_api(true)
@@ -139,16 +112,20 @@ const Satge2dash = () => {
         });
     };
 
+    const handleUnselectStudent = async (studentRoll: string) => {
+        const updatedStudents = clickedStudents.filter((s) => s.i !== studentRoll);
+        setClickedStudents(updatedStudents)
+    };
+
     const SendHeart_api = async (Submit: boolean) => {
         if (hearts_submitted) {
             return;
         }
-        if (Submit) {
+        if (S2submit) {
             set_hearts_submitted(true);
         }
-
-        const isValid = await Send_K(Id, receiverIds, Submit)
-        if (isValid && Submit) {
+        const isValid = await Send_K(Id, receiverIds, S2submit)
+        if (isValid && S2submit) {
             toast({
                 title: 'HEARTS SENT',
                 status: 'success',
@@ -157,7 +134,7 @@ const Satge2dash = () => {
                 position: 'top',
             })
         }
-        else if (!isValid && Submit) {
+        else if (!isValid && S2submit) {
             toast({
                 title: 'Error occurred , Hearts not sent',
                 status: 'error',
@@ -166,7 +143,7 @@ const Satge2dash = () => {
                 position: 'top',
             })
         }
-        else if (!isValid && !Submit) {
+        else if (!isValid && !S2submit) {
             toast({
                 title: 'Choices not saved',
                 status: 'error',
@@ -174,6 +151,7 @@ const Satge2dash = () => {
                 isClosable: true,
                 position: 'top',
             })
+            set_hearts_submitted(false);
         }
     }
 
@@ -214,30 +192,6 @@ const Satge2dash = () => {
 
         if (clickedStudents.length > 0) updateVirtualHeart()
     }, [clickedStudents])
-
-    useEffect(() => {
-        const fetchActiveUsers = async () => {
-            try {
-                const res = await fetch(
-                    `${SERVER_IP}/users/activeusers/stage2`, {
-                    method: "GET",
-                    credentials: "include",// For CORS
-                }
-                )
-                if (!res.ok) {
-                    throw new Error(`HTTP Error: ${res.status} - ${res.statusText}`);
-                }
-                const active = await res.json()
-                setActiveUsers(active.users)
-            }
-            catch (err) {
-                // Cannot fetch Active users
-                console.log(err)
-            }
-        }
-
-        fetchActiveUsers()
-    }, []);
 
     const isActive = (id: string) => {
         return activeUsers.includes(id);
@@ -284,10 +238,41 @@ const Satge2dash = () => {
                 <div className='section-A'>
                     <div className='section_1'>
                         <div className="info">
-
+                            <div className="image-container">
+                                <div className="image-box">
+                                    <div className="profile" style={stylesss}></div>
+                                </div>
+                                {user && <div className="detail">
+                                    <div className="details-text-name">{user?.n}</div>
+                                    {/* <div className="details-text" >{user?.d}</div> */}
+                                    <div className="details-text" >{user?.i}</div>
+                                    {!hearts_submitted ? (
+                                        <motion.div
+                                            whileHover={{ scale: 1.1 }}
+                                            whileTap={{ scale: 0.9 }}
+                                            className={styles["heart-submit-button"]}
+                                            onClick={handleToast}
+                                            style={{ color: "white", margin: "12px 0px" }}
+                                        >
+                                            Submit
+                                        </motion.div>
+                                    ) : (
+                                        <motion.div
+                                            className={styles["heart-submit-button"]}
+                                            style={{ color: "white", backgroundColor: 'grey' }}
+                                        >
+                                            Submitted
+                                        </motion.div>
+                                    )}
+                                </div>}
+                            </div>
                         </div>
                     </div>
-
+                </div>
+                <div className="section-B">
+                    <div className='section_3'>
+                        <h1>STAGE - 2</h1>
+                    </div>
                     <div className='section_2'>
                         <div className='logout-button-div'>
                             <motion.div
@@ -299,13 +284,34 @@ const Satge2dash = () => {
                             >
                                 {isShowStud ? "Hide" : "Show"}
                             </motion.div>
-
                         </div>
-
+                        <div>
+                            {
+                                isShowStud ? (clickedStudents.length > 0 ?
+                                    <div>
+                                        <ClickedStudent clickedStudents={clickedStudents} onUnselectStudent={handleUnselectStudent} hearts_submitted={hearts_submitted} />
+                                    </div>
+                                    :
+                                    <h2>Use search to select someone</h2>
+                                ) : ""
+                            }
+                        </div>
                     </div>
-                </div>
-                <div className="section-B">
+                    <div>
+                        {students.length == 0 &&
+                            <div>
+                                {/* <p>Welcome to Puppy Love</p> */}
+                                <Image
+                                    src={"/dashboard.jpeg"}
+                                    alt="Logo"
+                                    width={500}
+                                    height={30}
+                                />
+                            </div>}
+                        {
 
+                        }
+                    </div>
                     <GoToTop />
                 </div>
             </div>
@@ -314,4 +320,4 @@ const Satge2dash = () => {
     )
 }
 
-export default Satge2dash
+export default Stage2dash
