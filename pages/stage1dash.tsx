@@ -140,7 +140,7 @@ const Satge1dash = () => {
         if (hearts_submitted) {
             return;
         }
-        if (S1submit) {
+        if (Submit) {
             set_hearts_submitted(true);
         }
         for (let j = 0; j < clickedStudents.length; j++) {
@@ -150,8 +150,8 @@ const Satge1dash = () => {
         for (let j = clickedStudents.length; j < 4; j++) {
             receiverIds[j] = ''
         }
-        const isValid = await Send_M(Id, receiverIds, S1submit)
-        if (isValid && S1submit) {
+        const isValid = await Send_M(Id, receiverIds, Submit)
+        if (isValid && Submit) {
             toast({
                 title: 'HEARTS SENT',
                 status: 'success',
@@ -160,7 +160,7 @@ const Satge1dash = () => {
                 position: 'top',
             })
         }
-        else if (!isValid && S1submit) {
+        else if (!isValid && Submit) {
             toast({
                 title: 'Error occurred , Hearts not sent',
                 status: 'error',
@@ -169,7 +169,7 @@ const Satge1dash = () => {
                 position: 'top',
             })
         }
-        else if (!isValid && !S1submit) {
+        else if (!isValid && !Submit) {
             toast({
                 title: 'Choices not saved',
                 status: 'error',

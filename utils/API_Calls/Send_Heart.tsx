@@ -1,5 +1,5 @@
 import { SharedSecret, RandInt, Encryption_AES } from "../Encryption"
-import { choices, Set_Submit, PrivK } from "../UserData"
+import { choices, Set_Submit, PrivK, S1submit, Set_S1submit } from "../UserData"
 import sha256 from 'crypto-js/sha256';
 
 const SERVER_IP = process.env.SERVER_IP
@@ -99,8 +99,9 @@ export const Send_M = async (senderId: string, receiverIds: string[], Submit: bo
         }
 
         console.log(hearts)
+        console.log(Submit)
         if (Submit) {
-            Set_Submit(Submit)
+            Set_S1submit(Submit)
             const res = await fetch(
                 `${SERVER_IP}/users/sendheart/stage1`, {
                 method: "POST",

@@ -49,4 +49,9 @@
   .button:hover {
     background-color: #0056b3;
   }
+
+  .inactive {
+    filter: grayscale(100%);
+  }
+  
   
