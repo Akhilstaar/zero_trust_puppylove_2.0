@@ -1,10 +1,6 @@
-import { SHA256, SharedSecret, RandInt, Encryption_AES } from "../Encryption"
+import { SharedSecret, RandInt, Encryption_AES } from "../Encryption"
 import { choices, Set_Submit, PrivK } from "../UserData"
 import sha256 from 'crypto-js/sha256';
-import CryptoJS from 'crypto-js';
-import Hearts from "@/components/Hearts";
-import { random } from "lodash";
-import { error } from "console";
 
 const SERVER_IP = process.env.SERVER_IP
 
@@ -48,7 +44,7 @@ export const Send_M = async (senderId: string, receiverIds: string[], Submit: bo
         const r2 = await sha256((await RandInt()).toString());
         const r3 = await sha256((await RandInt()).toString());
         const r4 = await sha256((await RandInt()).toString());
-        const hearts: any[] = []
+        const hearts: BigInt[] = []
         const R: any[] = [r1, r2, r3, r4]
 
         const data = {
@@ -63,14 +59,13 @@ export const Send_M = async (senderId: string, receiverIds: string[], Submit: bo
         }
 
         let data_encrypt = await Encryption_AES(data.toString(), PrivK);
-
         console.log(receiverIds)
         for (const i in [0, 1, 2, 3]) {
             const id = receiverIds[i]
             if (id === '') {
                 const m = BigInt('0x' + R[i]);
                 console.log(i, m);
-                hearts[i] = m;
+                hearts.push(m);
                 continue
             }
 
@@ -80,8 +75,7 @@ export const Send_M = async (senderId: string, receiverIds: string[], Submit: bo
             console.log(sha);
             const m = BigInt('0x' + R[i]);
             const heart = sha ^ m;
-            hearts[i] = heart
-
+            hearts.push(heart);
         }
 
         const res = await fetch(
@@ -89,10 +83,10 @@ export const Send_M = async (senderId: string, receiverIds: string[], Submit: bo
             method: "POST",
             credentials: "include",  // For CORS
             body: JSON.stringify({
-                m1: hearts[0].toString(),
-                m2: hearts[1].toString(),
-                m3: hearts[2].tostring(),
-                m4: hearts[3].tostring(),
+                M1: hearts[0].toString(),
+                M2: hearts[1].toString(),
+                M3: hearts[2].toString(),
+                M4: hearts[3].toString(),
                 S1Data: data_encrypt
             }),
         }
@@ -109,10 +103,10 @@ export const Send_M = async (senderId: string, receiverIds: string[], Submit: bo
                 method: "POST",
                 credentials: "include",  // For CORS
                 body: JSON.stringify({
-                    m1: hearts[0].toString(),
-                    m2: hearts[1].toString(),
-                    m3: hearts[2].tostring(),
-                    m4: hearts[3].tostring(),
+                    M1: hearts[0].toString(),
+                    M2: hearts[1].toString(),
+                    M3: hearts[2].toString(),
+                    M4: hearts[3].toString(),
                     S1Data: data_encrypt
                 }),
             }
