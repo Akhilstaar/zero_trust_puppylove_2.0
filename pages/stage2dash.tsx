@@ -134,8 +134,8 @@ const Stage2dash = () => {
         if (S2submit) {
             set_hearts_submitted(true);
         }
-        const isValid = await Send_K(Id, stage2Bool, S2submit)
-        if (isValid && S2submit) {
+        const isValid = await Send_K(Id, stage2Bool, Submit)
+        if (isValid && Submit) {
             toast({
                 title: 'HEARTS SENT',
                 status: 'success',
@@ -144,7 +144,7 @@ const Stage2dash = () => {
                 position: 'top',
             })
         }
-        else if (!isValid && S2submit) {
+        else if (!isValid && Submit) {
             toast({
                 title: 'Error occurred , Hearts not sent',
                 status: 'error',
@@ -153,7 +153,7 @@ const Stage2dash = () => {
                 position: 'top',
             })
         }
-        else if (!isValid && !S2submit) {
+        else if (!isValid && !Submit) {
             toast({
                 title: 'Choices not saved',
                 status: 'error',

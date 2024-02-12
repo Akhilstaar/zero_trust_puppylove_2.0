@@ -169,10 +169,7 @@ interface S2hearts {
 export const Send_K = async (senderId: string, receiverIds: boolean[], Submit: boolean) => {
     try {
         await fetchStage1Keys()
-        if (!isStage1KAvail) {
-            console.log("ngg")
-            isStage1KAvail = true
-        }
+
         console.log(receiverIds);
         const Hearts: S2hearts[] = []
         const R: string[] = [choices.r1, choices.r2, choices.r3, choices.r4]
