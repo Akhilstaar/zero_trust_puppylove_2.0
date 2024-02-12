@@ -31,7 +31,7 @@ const Stage2dash = () => {
     const [hearts_submitted, set_hearts_submitted] = useState(S2submit);
     const [clickedStudents, setClickedStudents] = useState<Student[]>([]);
     const [isShowStud, setShowStud] = useState(false);
-    const [stage2Bool, set_stage2Bool] = useState<boolean[]>(Array(4).fill(false));
+    const [stage2Bool, set_stage2Bool] = useState<boolean[]>(Array<boolean>(4));
 
     useEffect(() => {
         toast.closeAll()
@@ -62,7 +62,7 @@ const Stage2dash = () => {
 
     const fetchAndSelectStudents = async () => {
         const selected: Student[] = [];
-        const updatedStage2Bool = [...stage2Bool]
+        const updatedStage2Bool = [false,false,false,false]
     
         for (let i = 0; i < 4; i++) {
             const id = receiverIds[i]
@@ -71,7 +71,7 @@ const Stage2dash = () => {
                 continue
             }
             updatedStage2Bool[i] = true
-            
+
             const data = search_students(id);
             if (data === undefined) {
                 return;
@@ -81,6 +81,7 @@ const Stage2dash = () => {
                 selected.push(student);
             }
         }
+        console.log(updatedStage2Bool)
         set_stage2Bool(updatedStage2Bool)
         setClickedStudents([...clickedStudents, ...selected])
     }
@@ -123,6 +124,7 @@ const Stage2dash = () => {
         const updatedStage2Bool = [...stage2Bool];
         updatedStage2Bool[index] = value;
         set_stage2Bool(updatedStage2Bool);
+        console.log(stage2Bool)
     };
 
     const SendHeart_api = async (Submit: boolean) => {
