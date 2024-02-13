@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import "../styles/result-page.css";
 import Clear from "@/components/clear";
 import Hearts from "@/components/Hearts";
-import { admin_pulished, Id, Matched_Ids, Matches, setMatches, setUser, Submit, user } from "@/utils/UserData";
+import { admin_pulished, Choices, choices, Id, Matched_Ids, setUser, Submit, user } from "@/utils/UserData";
 import Results from "@/components/matchedResults";
 import { useRouter } from "next/router"
 import { search_students, Student } from '@/utils/API_Calls/search';
@@ -35,19 +35,21 @@ const ResultPage = () => {
 
     useEffect(() => {
         const show_result = async () => {
-            await get_result();
-            if (Matched_Ids[0] == '') {
-                return
-            };
-            for (let j = 0; j < Matched_Ids.length; j++) {
-                const data: Array<Student> = search_students(Matched_Ids[j]);
-                if (!data.length) {
-                    return;
-                }
-                const student = data[0];
+            const match_bool_array = await get_result();
+            for (let j = 0; j < 4; j++) {
+                if(match_bool_array[j] == true){
+                    const data: Array<Student> = search_students(choices[`r${j+1}` as keyof Choices])
+                
+                    if (!data.length) {
+                        return;
+                    }
+                    const student = data[0];
 
-                if (!Matches.includes(student)) {
-                    setMatches((prev) => [...prev, student])
+                    if (!Matches.includes(student)) {
+                        setMatches((prev) => [...prev, student])
+                    }
+                }else{
+                    continue;
                 }
             }
         }
@@ -125,7 +127,6 @@ const ResultPage = () => {
 
                         <div className='section_3r' style={{ display: "flex", justifyContent: "center" }}>
                             <h1>Sorry! No matches to show</h1>
-                            {/* <h1>Lets try next year</h1> */}
                         </div>
                     }
                 </div>

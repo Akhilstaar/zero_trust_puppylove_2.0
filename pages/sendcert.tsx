@@ -36,54 +36,54 @@ const SendCert: React.FC = () => {
             })
         }
     }
-}
 
-useEffect(() => {
-    toast.closeAll()
-}, [])
 
-// Either Page was Reloaded or User Tried to Access the page before time.
-// In Any Case push router to Login Page
-useEffect(() => {
+    useEffect(() => {
+        toast.closeAll()
+    }, [])
+
+    // Either Page was Reloaded or User Tried to Access the page before time.
+    // In Any Case push router to Login Page
+    useEffect(() => {
+        if (Id === '') {
+            router.push(`/login`)
+        }
+    })
     if (Id === '') {
-        router.push(`/login`)
+        return
     }
-})
-if (Id === '') {
-    return
-}
 
-return (
-    <div>
-        <Clear />
-        <div className={styles["login-box"]}>
-            <div className={styles["login-box2"]}>
-                <Dog />
-                <div className={styles["login-container"]}>
-                    <h1 className={styles["login-title"]} style={{ color: "black" }}>Do you want to get matched?</h1>
-                    <div className={styles["login-bottom"]}>
+    return (
+        <div>
+            <Clear />
+            <div className={styles["login-box"]}>
+                <div className={styles["login-box2"]}>
+                    <Dog />
+                    <div className={styles["login-container"]}>
+                        <h1 className={styles["login-title"]} style={{ color: "black" }}>Do you want to get matched?</h1>
+                        <div className={styles["login-bottom"]}>
 
-                        <motion.div
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                            className={styles["login-submit-button"]}
-                            onClick={submit_yes}
-                            style={{ width: "80%", backgroundColor: "#d61174", color: "white", fontSize: "22px" }}
-                        >
-                            YES
-                        </motion.div>
-                        <motion.div
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                        >
-                            <Link href={"/"}>NO</Link>
-                        </motion.div>
+                            <motion.div
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                                className={styles["login-submit-button"]}
+                                onClick={submit_yes}
+                                style={{ width: "80%", backgroundColor: "#d61174", color: "white", fontSize: "22px" }}
+                            >
+                                YES
+                            </motion.div>
+                            <motion.div
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                            >
+                                <Link href={"/"}>NO</Link>
+                            </motion.div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-);
-};
+    );
+    };
 
-export default SendCert;
+    export default SendCert;
