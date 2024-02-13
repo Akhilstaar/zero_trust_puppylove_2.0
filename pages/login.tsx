@@ -55,12 +55,15 @@ const LoginPage: React.FC = () => {
             else if (!status.stage2) {
                 router.push(`/stage2dash`)
             }
-            else if (!status.certgiven) {
-                router.push(`/sendcert`)
-            }
-            else if(status.stage1 && status.stage2 && status.certgiven){
+            else{
                 router.push(`/result`)
             }
+            // else if (!status.certgiven) {
+            //     router.push(`/sendcert`)
+            // }
+            // else if(status.stage1 && status.stage2 && status.certgiven){
+            //     router.push(`/result`)
+            // }
         }
         else {
             toast({

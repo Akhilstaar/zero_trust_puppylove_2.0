@@ -126,8 +126,6 @@ export async function Set_S1Data(data_enc: string) {
         receiverIds[1] = choices.recv2;
         receiverIds[2] = choices.recv3;
         receiverIds[3] = choices.recv4;
-        // console.log(receiverIds)
-        // console.log(choices)
     } catch (error) {
         console.error('Error decrypting data:', error);
     }

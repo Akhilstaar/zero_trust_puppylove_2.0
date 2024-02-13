@@ -128,11 +128,8 @@ const Stage2dash = () => {
     };
 
     const SendHeart_api = async (Submit: boolean) => {
-        if (hearts_submitted) {
+        if (S2submit && Submit) {
             return;
-        }
-        if (S2submit) {
-            set_hearts_submitted(true);
         }
         const isValid = await Send_K(Id, stage2Bool, Submit)
         if (isValid && Submit) {

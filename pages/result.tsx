@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import "../styles/result-page.css";
 import Clear from "@/components/clear";
 import Hearts from "@/components/Hearts";
-import { Choices, choices, Id, setUser, Submit, user } from "@/utils/UserData";
+import { choices, Id, setUser, Submit, user } from "@/utils/UserData";
 import Results from "@/components/matchedResults";
 import { useRouter } from "next/router"
 import { search_students, Student } from '@/utils/API_Calls/search';
@@ -37,9 +37,10 @@ const ResultPage = () => {
         const show_result = async () => {
             const match_bool_array = await get_result();
             console.log(match_bool_array)
+            const chhs = [choices.recv1, choices.recv2, choices.recv3, choices.recv4]
             for (let j = 0; j < 4; j++) {
                 if (match_bool_array[j] == true) {
-                    const data: Array<Student> = search_students(choices[`r${j + 1}` as keyof Choices])
+                    const data: Array<Student> = search_students(chhs[j])
 
                     if (!data.length) {
                         return;
@@ -127,6 +128,7 @@ const ResultPage = () => {
                         :
 
                         <div className='section_3r' style={{ display: "flex", justifyContent: "center" }}>
+                            <h1> Waiting for a match !! </h1>
                             <h1>Sorry! No matches yet, please try again after some time.</h1>
                         </div>
                     }

@@ -230,99 +230,81 @@ export const Send_K = async (senderId: string, receiverIds: boolean[], Submit: b
             // console.log(k1, k2, k3, k4)
 
             // Hashing k's to avoid collusion from server side.
-            const x1 = await sha256(await RandInt().toString());
-            const xx: string = m21 + "-" + m22 + "-" + m23 + "-" + m24 + "-" + x1.toString();
-            const s2x = BigInt('0x' + await sha256(await sha256(xx)));
+            // const x1 = await sha256(await RandInt().toString());
+            // const xx: string = m21 + "-" + m22 + "-" + m23 + "-" + m24 + "-" + x1.toString();
+            // const s2x = BigInt('0x' + await sha256(await sha256(xx)));
 
-            heart.k1 = (k1 ^ s2x).toString();
-            heart.k2 = (k2 ^ s2x).toString();
-            heart.k3 = (k3 ^ s2x).toString();
-            heart.k4 = (k4 ^ s2x).toString();
-            heart.cert = s2x.toString();
-
+            // heart.k1 = (k1 ^ s2x).toString();
+            // heart.k2 = (k2 ^ s2x).toString();
+            // heart.k3 = (k3 ^ s2x).toString();
+            // heart.k4 = (k4 ^ s2x).toString();
+            // heart.cert = s2x.toString();
+            heart.k1 = k1.toString();
+            heart.k2 = k2.toString();
+            heart.k3 = k3.toString();
+            heart.k4 = k4.toString();
             Hearts.push(heart);
-            Certs.push((await sha256(xx)).toString());
+            // Certs.push((await sha256(xx)).toString());
         }
-        let Cert_data = {
-            cert1: Certs[0],
-            cert2: Certs[1],
-            cert3: Certs[2],
-            cert4: Certs[3],
-        }
-        const base_enc_crt = Buffer.from(JSON.stringify(Cert_data)).toString('base64');
-        let cert_encrypt = await Encryption_AES(base_enc_crt.toString(), PrivK);
+        // let Cert_data = {
+        //     cert1: Certs[0],
+        //     cert2: Certs[1],
+        //     cert3: Certs[2],
+        //     cert4: Certs[3],
+        // }
+        // const base_enc_crt = Buffer.from(JSON.stringify(Cert_data)).toString('base64');
+        // let cert_encrypt = await Encryption_AES(base_enc_crt.toString(), PrivK);
+        const bdy = JSON.stringify({
+            Ka1: Hearts[0].k1,
+            Ka2: Hearts[0].k2,
+            Ka3: Hearts[0].k3,
+            Ka4: Hearts[0].k4,
+            Kb1: Hearts[1].k1,
+            Kb2: Hearts[1].k2,
+            Kb3: Hearts[1].k3,
+            Kb4: Hearts[1].k4,
+            Kc1: Hearts[2].k1,
+            Kc2: Hearts[2].k2,
+            Kc3: Hearts[2].k3,
+            Kc4: Hearts[2].k4,
+            Kd1: Hearts[3].k1,
+            Kd2: Hearts[3].k2,
+            Kd3: Hearts[3].k3,
+            Kd4: Hearts[3].k4,
+            CertA: Hearts[0].cert,
+            CertB: Hearts[1].cert,
+            CertC: Hearts[2].cert,
+            CertD: Hearts[3].cert,
+            S2Data: "cert_encrypt",
+        });
 
-        // console.log(Hearts[0], Hearts[1], Hearts[2], Hearts[3]);
-        const res = await fetch(
-            `${SERVER_IP}/users/sendheartvirtual/stage2`, {
-            method: "POST",
-            credentials: "include",  // For CORS
-            body: JSON.stringify({
-                Ka1: Hearts[0].k1,
-                Ka2: Hearts[0].k2,
-                Ka3: Hearts[0].k3,
-                Ka4: Hearts[0].k4,
-                Kb1: Hearts[1].k1,
-                Kb2: Hearts[1].k2,
-                Kb3: Hearts[1].k3,
-                Kb4: Hearts[1].k4,
-                Kc1: Hearts[2].k1,
-                Kc2: Hearts[2].k2,
-                Kc3: Hearts[2].k3,
-                Kc4: Hearts[2].k4,
-                Kd1: Hearts[3].k1,
-                Kd2: Hearts[3].k2,
-                Kd3: Hearts[3].k3,
-                Kd4: Hearts[3].k4,
-                CertA: Hearts[0].cert,
-                CertB: Hearts[1].cert,
-                CertC: Hearts[2].cert,
-                CertD: Hearts[3].cert,
-                S2Data: cert_encrypt,
-            }),
-        }
-        );
-        if (!res.ok) {
-            throw new Error(`HTTP Error: ${res.status} - ${res.statusText}`);
-        }
-
-        console.log(Hearts)
-        if (Submit) {
-            Set_Submit(Submit)
+        if (!Submit) {
             const res = await fetch(
-                `${SERVER_IP}/users/sendheart/stage2`, {
+                `${SERVER_IP}/users/sendheartvirtual/stage2`, {
                 method: "POST",
                 credentials: "include",  // For CORS
-                body: JSON.stringify({
-                    Ka1: Hearts[0].k1,
-                    Ka2: Hearts[0].k2,
-                    Ka3: Hearts[0].k3,
-                    Ka4: Hearts[0].k4,
-                    Kb1: Hearts[1].k1,
-                    Kb2: Hearts[1].k2,
-                    Kb3: Hearts[1].k3,
-                    Kb4: Hearts[1].k4,
-                    Kc1: Hearts[2].k1,
-                    Kc2: Hearts[2].k2,
-                    Kc3: Hearts[2].k3,
-                    Kc4: Hearts[2].k4,
-                    Kd1: Hearts[3].k1,
-                    Kd2: Hearts[3].k2,
-                    Kd3: Hearts[3].k3,
-                    Kd4: Hearts[3].k4,
-                    CertA: Hearts[0].cert,
-                    CertB: Hearts[1].cert,
-                    CertC: Hearts[2].cert,
-                    CertD: Hearts[3].cert,
-                    S2Data: cert_encrypt,
-                }),
+                body: bdy,
             }
             );
             if (!res.ok) {
                 throw new Error(`HTTP Error: ${res.status} - ${res.statusText}`);
             }
+            else return true;
         }
-        return true
+        else {
+
+            const res1 = await fetch(
+                `${SERVER_IP}/users/sendheart/stage2`, {
+                method: "POST",
+                credentials: "include",  // For CORS
+                body: bdy,
+            }
+            );
+            if (!res1.ok) {
+                throw new Error(`HTTP Error: ${res1.status} - ${res1.statusText}`);
+            }
+            else return true;
+        }
     }
     catch (err) {
         console.log(err)
